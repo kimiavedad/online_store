@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/entities/product.entity';
+import { ProductHistory } from './products/entities/product-history.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { Product } from './products/entities/product.entity';
       username: 'admin',
       password: 'password',
       database: 'online_store',
-      entities: [Product],
+      entities: [Product, ProductHistory],
       synchronize: true,
       // shouldn't be used in production
       // TODO: create an env file and set up these items from there
