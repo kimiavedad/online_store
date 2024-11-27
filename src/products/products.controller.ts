@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { PurchaseProductDto } from './dto/purchase-product.dto';
@@ -18,6 +27,7 @@ export class ProductsController {
   }
 
   @Post(':id/purchase')
+  @HttpCode(HttpStatus.OK)
   purchase(
     @Param('id') id: string,
     @Body() purchaseProductDto: PurchaseProductDto,

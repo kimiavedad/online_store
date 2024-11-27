@@ -18,6 +18,5 @@ const config = {
   debug: `${process.env.DEBUG}` === 'true',
 };
 
-console.log(config)
 export default registerAs('typeorm', () => config);
 export const connectionSource = new DataSource(config as DataSourceOptions);

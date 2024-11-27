@@ -27,8 +27,8 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date | null;
 
   get isDeleted(): boolean {
     return !!this.deletedAt;

@@ -37,14 +37,11 @@ export class ProductsService {
   ): Promise<Product> {
     const product = await this.productRespository.findOne({ where: { id } });
 
-    if (
-      !product ||
-      product.isDeleted ||
-      product.quantity < purchaseProductDto.quantity
-    ) {
-      throw new NotFoundException(
-        'Product not available or insufficient quantity',
-      );
+    if (!product || product.isDeleted) {
+      throw new NotFoundException('Product not found.');
+    }
+    if (product.quantity < purchaseProductDto.quantity) {
+      throw new NotFoundException('Product insufficient quantity');
     }
     product.quantity -= purchaseProductDto.quantity;
     const updatedProduct = this.productRespository.save(product);

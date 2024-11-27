@@ -28,8 +28,8 @@ export class ProductHistory {
   @Column()
   productUpdatedAt: Date;
 
-  @Column()
-  productDeletedAt: Date;
+  @Column({ nullable: true })
+  productDeletedAt: Date | null;
 
   @Column({ type: 'varchar', length: 255 })
   changeReason: string;
