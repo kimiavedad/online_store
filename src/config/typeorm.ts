@@ -2,7 +2,7 @@ import { registerAs } from '@nestjs/config';
 import { config as dotenvConfig } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-dotenvConfig({ path: '.env' });
+dotenvConfig({ path: __dirname + '/../../.env' });
 
 const config = {
   type: 'mysql',
@@ -14,8 +14,10 @@ const config = {
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
-  synchronize: false,
+  synchronize: `${process.env.DATABASE_SYNCHRONIZE}` === 'true',
+  debug: `${process.env.DEBUG}` === 'true',
 };
 
+console.log(config)
 export default registerAs('typeorm', () => config);
 export const connectionSource = new DataSource(config as DataSourceOptions);
