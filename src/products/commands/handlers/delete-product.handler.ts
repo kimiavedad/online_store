@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../../../products/entities/product.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { ProductHistoryService } from 'products/services/product-history.service';
+import { ProductHistoryService } from '../../../products/services/product-history.service';
 
 @CommandHandler(DeleteProductCommand)
 export class DeleteProductHandler
