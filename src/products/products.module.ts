@@ -18,5 +18,3 @@ import { ProductHistoryService } from './services/product-history.service';
   providers: [...CommandHandlers, ...QueryHandlers, ProductHistoryService],
 })
 export class ProductsModule {}
-
-console.log(QueryHandlers);
