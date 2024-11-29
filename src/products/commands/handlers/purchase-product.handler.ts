@@ -3,7 +3,7 @@ import { PurchaseProductCommand } from '../purchase-product.command';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/products/entities/product.entity';
 import { Repository } from 'typeorm';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @CommandHandler(PurchaseProductCommand)
 export class PurchaseProductHandler
@@ -22,7 +22,7 @@ export class PurchaseProductHandler
       throw new NotFoundException('Product not found.');
     }
     if (product.quantity < purchaseProductDto.quantity) {
-      throw new NotFoundException('Product insufficient quantity');
+      throw new BadRequestException('Insufficient quantity available for purchase');
     }
     product.quantity -= purchaseProductDto.quantity;
     const updatedProduct = this.productRepository.save(product);
