@@ -6,6 +6,7 @@ import { ProductHistory } from './entities/product-history.entity';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CommandHandlers } from './commands/handlers';
 import { QueryHandlers } from './queries/handlers';
+import { ProductHistoryService } from './services/product-history.service';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { QueryHandlers } from './queries/handlers';
     TypeOrmModule.forFeature([ProductHistory]),
   ],
   controllers: [ProductsController],
-  providers: [...CommandHandlers, ...QueryHandlers],
+  providers: [...CommandHandlers, ...QueryHandlers, ProductHistoryService],
 })
 export class ProductsModule {}
 

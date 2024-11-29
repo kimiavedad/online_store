@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../../../products/entities/product.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
+import { ProductHistoryService } from 'products/services/product-history.service';
 
 @CommandHandler(DeleteProductCommand)
 export class DeleteProductHandler
@@ -12,6 +13,7 @@ export class DeleteProductHandler
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    private readonly productHistoryService: ProductHistoryService,
   ) {}
 
   async execute(command: DeleteProductCommand): Promise<any> {
@@ -21,6 +23,6 @@ export class DeleteProductHandler
       throw new NotFoundException('Product not found.');
     }
     await this.productRepository.softDelete(id);
-    // TODO: record history
+    await this.productHistoryService.recordProductHistory(product, 'DELETED');
   }
 }

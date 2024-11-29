@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../../../products/entities/product.entity';
 import { Repository } from 'typeorm';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { ProductHistoryService } from 'products/services/product-history.service';
 
 @CommandHandler(PurchaseProductCommand)
 export class PurchaseProductHandler
@@ -12,6 +13,7 @@ export class PurchaseProductHandler
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    private readonly productHistoryService: ProductHistoryService,
   ) {}
 
   async execute(command: PurchaseProductCommand): Promise<any> {
@@ -27,9 +29,11 @@ export class PurchaseProductHandler
       );
     }
     product.quantity -= purchaseProductDto.quantity;
-    const updatedProduct = this.productRepository.save(product);
-
-    // TODO: record history
+    const updatedProduct = await this.productRepository.save(product);
+    await this.productHistoryService.recordProductHistory(
+      updatedProduct,
+      'PURCHASED',
+    );
     return updatedProduct;
   }
 }
