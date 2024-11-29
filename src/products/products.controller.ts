@@ -8,22 +8,29 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { PurchaseProductDto } from './dto/purchase-product.dto';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { DisplayProductQuery } from './queries/display-product.query';
+import { CreateProductCommand } from './commands/create-product.command';
+import { DeleteProductCommand } from './commands/delete-product.command';
+import { PurchaseProductCommand } from './commands/purchase-product.command';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+    return this.commandBus.execute(new CreateProductCommand(createProductDto));
   }
 
   @Get(':id')
   display(@Param('id') id: string) {
-    return this.productsService.display(id);
+    return this.queryBus.execute(new DisplayProductQuery(id));
   }
 
   @Post(':id/purchase')
@@ -32,11 +39,13 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() purchaseProductDto: PurchaseProductDto,
   ) {
-    return this.productsService.purchase(id, purchaseProductDto);
+    return this.commandBus.execute(
+      new PurchaseProductCommand(id, purchaseProductDto),
+    );
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.productsService.delete(id);
+    return this.commandBus.execute(new DeleteProductCommand(id));
   }
 }
